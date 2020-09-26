@@ -1,3 +1,1 @@
-# CS2513
-
-_Intermediate Programming_
+# Intermediate Programming
