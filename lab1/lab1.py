@@ -1,3 +1,6 @@
+# Script Name: lab1.py
+# Author: Conor Fox 119322236
+
 # Q1
 
 def temperature(t=0):
@@ -26,4 +29,18 @@ def printTriangle(n):
             else:
                 print('x'*i)
 
-printTriangle(6)
+# printTriangle(6)
+
+# Q3
+
+def numbers():
+    print('Enter Three Numbers')
+    num1 = input('First number: ')
+    num2 = input('Second number: ')
+    num3 = input('Third number: ')
+    if num1 == num2 == num3:
+        print('\nAll Equal')
+    else:
+        print('\nNot Equal')
+
+# numbers()
