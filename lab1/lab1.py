@@ -13,5 +13,17 @@ def temperature(t=0):
         t = (t * 9/5 + 32)
         print(str(t) + ' degrees Fahrenheit')
 
-temperature(122)
-temperature(50)
+# temperature(122)
+# temperature(50)
+
+# Q2
+
+def printTriangle(n):
+    if n > 0:
+        for i in range(1,n+1):
+            if i % 2:
+                print('o'*i)
+            else:
+                print('x'*i)
+
+printTriangle(6)
