@@ -51,12 +51,3 @@ class Orc:
     def __str__(self):
         orc_string = "{}, {}, {}".format(self._name, self._strength, self._weapon)
         return orc_string
-
-def main():
-    my_orc = Orc('Conor', 5, True)
-    my_orc.name = 'Bob'
-    my_orc.strength = 3
-    print(my_orc)
-
-if __name__ == '__main__':
-    main()
