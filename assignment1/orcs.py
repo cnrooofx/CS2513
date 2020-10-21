@@ -43,11 +43,31 @@ class Orc:
             print("type ERROR")
 
     def fight_with(self, other_orc):
-        return
+        if self._weapon or other_orc.weapon:
+            if self._weapon and not other_orc.weapon:
+                self.strength += 1
+                print(self)
+            elif other_orc.weapon and not self._weapon:
+                other_orc.strength += 1
+                print(other_orc)
+            else:
+                self.strength -= 0.5
+                other_orc.strength -= 0.5
+        else:
+            if self > other_orc:
+                self.strength += 1
+                print(self)
+            elif other_orc > self:
+                other_orc.strength += 1
+                print(other_orc)
+            else:
+                self.strength -= 0.5
+                other_orc.strength -= 0.5
 
     def __gt__(self, other_orc):
-        return
+        if self._strength > other_orc.strength:
+            return True
+        return False
 
     def __str__(self):
-        orc_string = "{}, {}, {}".format(self._name, self._strength, self._weapon)
-        return orc_string
+        return "{} {} {}".format(self._name, self._strength, self._weapon)
