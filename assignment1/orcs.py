@@ -1,8 +1,27 @@
 class Orc:
     def __init__(self, orc_name, strength, weapon):
-        self._name = orc_name
-        self._strength = strength
-        self._weapon = weapon
+        if isinstance(orc_name, str):
+            self._name = orc_name
+        else:
+            print("type ERROR")
+            self._name = 'Name'
+
+        if isinstance(strength, (float, int)):
+            if strength < 0:
+                self._strength = 0.0
+            elif strength > 5:
+                self._strength = 5.0
+            else:
+                self._strength = float(strength)
+        else:
+            print("type ERROR")
+            self._strength = 0.0
+
+        if isinstance(weapon, bool):
+            self._weapon = weapon
+        else:
+            print("type ERROR")
+            self._weapon = False
 
     @property
     def name(self):
