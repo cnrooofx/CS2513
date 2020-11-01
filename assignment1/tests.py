@@ -58,3 +58,11 @@ orc1.strength = 5
 orc1.fight_with(orc2)
 
 print('After fighting equal', orc1, orc2)
+
+print("----------------\nTrying to Break\n----------------")
+
+hello = 'hello'
+
+orc1.fight_with(hello)
+
+print(orc2 < hello)
