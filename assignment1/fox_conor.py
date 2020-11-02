@@ -7,8 +7,20 @@ Author: Conor Fox 119322236
 
 class Character:
     def __init__(self, name, strength):
-        self._name = name
-        self._strength = strength
+        if isinstance(name, str):
+            self._name = name
+        else:
+            print("type ERROR")
+
+        if isinstance(strength, (float, int)):
+            if strength < 0:
+                self._strength = 0.0
+            elif strength > 5:
+                self._strength = 5.0
+            else:
+                self._strength = float(strength)
+        else:
+            print("type ERROR")
 
     @property
     def name(self):
@@ -38,7 +50,7 @@ class Character:
             print("type ERROR")
 
     def fight(self, other):
-        if issubclass(other, Character):
+        if isinstance(other, Character):
             if self > other:
                 self.strength += 1
                 print(self)
@@ -61,7 +73,10 @@ class Character:
 class Orc(Character):
     def __init__(self, name, strength, weapon):
         Character.__init__(self, name, strength)
-        self._weapon = weapon
+        if isinstance(weapon, bool):
+            self._weapon = weapon
+        else:
+            print('type ERROR')
 
     @property
     def weapon(self):
@@ -74,31 +89,27 @@ class Orc(Character):
         else:
             print("type ERROR")
 
+    def __str__(self):
+        return Character.__str__(self) + ' ' + str(self._weapon)
+
     def __gt__(self, other):
-        # if self._weapon or other_orc.weapon:
-        #     if self._weapon and other_orc.weapon and \
-        #        self._strength > other_orc.strength:
-        #         return True
-        #     if self._weapon and not other_orc.weapon:
-        #         return True
-        # elif self._strength > other_orc.strength:
-        #     return True
-        # return False
-        # if isinstance(other, Orc):
-        #     if self.weapon and other.weapon:
-        #         return self > other
-        #     if self.weapon and not other.weapon:
-        #         return True
-        # elif not self._weapon:
-        #
-        # return Character.__gt__(self, other)
-        pass
+        if isinstance(other, Orc):
+            if self.weapon and other.weapon:
+                return Character.__gt__(self, other)
+            if self.weapon and not other.weapon:
+                return True
+        elif not self._weapon:
+            return False
+        return Character.__gt__(self, other)
 
 
 class Human(Character):
     def __init__(self, name, strength, kingdom):
         Character.__init__(self, name, strength)
-        self._kingdom = kingdom
+        if isinstance(kingdom, str):
+            self._kingdom = kingdom
+        else:
+            print('type ERROR')
 
     def __str__(self):
         return Character.__str__(self) + ' ' + self._kingdom
@@ -121,26 +132,52 @@ class Human(Character):
             print('fight Error')
 
 
-class Archer(Human):
-    pass
-
-
 class Knight(Human):
-    def __init__(self, name, strength, kingdom):
+    def __init__(self, name, strength, kingdom, archers_list=[]):
         Human.__init__(self, name, strength, kingdom)
-        self._archers_list = []
+        if isinstance(archers_list, list):
+            self._archers_list = archers_list
+        else:
+            print('type ERROR')
 
     def __str__(self):
         return Human.__str__(self) + ' ' + str(self._archers_list)
 
+    @property
+    def archers_list(self):
+        return self._archers_list
+
+    @archers_list.setter
+    def archers_list(self, archers_list):
+        if isinstance(archers_list, list):
+            knights_archers = []  # New list to contain satisfactory archers
+            for item in archers_list:
+                if isinstance(item, Archer):  # The item must be an Archer
+                    if item.kingdom == self._kingdom:  # If same kingdom
+                        knights_archers += item  # Add the archer to the list
+                else:
+                    print('archers list ERROR')
+            self._archers_list = knights_archers  # Set the knights archer list
+        else:
+            print('type ERROR')
+
+
+class Archer(Human):
+    pass
+
 
 def main():
-    # a1 = Archer('Conor', 1.0, 'Gondor')
-    # print(a1.name)
+    a1 = Archer('Conor', 1.0, 'Gondor')
+    print(a1.name)
     k1 = Knight('Bob', 4.5, 'Gondor')
     print(k1)
-    o1 = Orc('Ogrorg', 5.0, False)
-    print(o1 > k1)
+    o1 = Orc('Ogrorg', 3.6, True)
+    o2 = Orc('Borg', 0, True)
+    print(o2 > k1)
+    # k1.fight(o1)
+    print(a1)
+    print(k1)
+    print(o1)
 
 
 if __name__ == '__main__':
