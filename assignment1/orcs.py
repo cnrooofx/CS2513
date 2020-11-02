@@ -143,7 +143,7 @@ class Orc:
             if self._weapon and other_orc.weapon and \
                self._strength > other_orc.strength:
                 return True
-            elif self._weapon and not other_orc.weapon:
+            if self._weapon and not other_orc.weapon:
                 return True
         elif self._strength > other_orc.strength:
             return True
