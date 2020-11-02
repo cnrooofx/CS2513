@@ -66,3 +66,9 @@ hello = 'hello'
 orc1.fight_with(hello)
 
 print(orc2 < hello)
+
+orc3 = Orc('Dylan', 2.6, True)
+orc4 = Orc('Conor', 2.5, True)
+
+print(orc3, 'vs', orc4)
+print(orc3 > orc4)

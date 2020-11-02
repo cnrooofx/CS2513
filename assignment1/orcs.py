@@ -9,9 +9,9 @@ class Orc:
     """Class to make an orc character for a video game.
 
     Attributes:
-        _name: String for the name of the orc.
-        _strength: Float between 0.0 and 5.0
-        _weapon: Boolean value to represent a weapon.
+        _name (str): Name of the orc (Protected)
+        _strength (float): Orc strength value between 0.0 and 5.0 (Protected)
+        _weapon (bool): Boolean value to represent a weapon (Protected)
     """
 
     def __init__(self, orc_name, strength, weapon):
@@ -105,10 +105,10 @@ class Orc:
         """Fight with another orc object.
 
         Notes:
-            If one orc has a weapon and the other does not, the one with the
-            weapon wins regardless of strength. If both orcs have weapons or
-            neither orc has a weapon, the orc with the highest strength wins.
-            If both orcs are equal in weapons and strength, both lose.
+            If one orc is stronger than the other, then the stronger orc wins
+            and it's strength is increased by 1.
+            If neither orc is stronger, both lose and both strengths are
+            decreased by 0.5.
 
         Args:
             other_orc: Another Orc object to fight with.
@@ -125,11 +125,24 @@ class Orc:
                 other_orc.strength -= 0.5
 
     def __gt__(self, other_orc):
-        """Return True if Orc is stronger than other_orc, otherwise False."""
+        """Compare the strength of the orcs.
+
+        Notes:
+            If one orc has a weapon and the other does not, the one with the
+            weapon is stronger regardless of strength. If both orcs have
+            weapons or neither orc has a weapon, the orc with the highest
+            strength is stronger.
+
+        Args:
+            other_orc: Another Orc object to compare with
+
+        Returns:
+            True if Orc is stronger than other_orc, otherwise False.
+        """
         if self._weapon or other_orc.weapon:
-            if self._weapon and other_orc.weapon:
-                if self._strength > other_orc.strength:
-                    return True
+            if self._weapon and other_orc.weapon and \
+               self._strength > other_orc.strength:
+                return True
             elif self._weapon and not other_orc.weapon:
                 return True
         elif self._strength > other_orc.strength:
