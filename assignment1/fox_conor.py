@@ -23,7 +23,7 @@ class Character:
         if isinstance(name, str):
             self._name = name
         else:
-            print("type ERROR")
+            print('type ERROR')
 
         if isinstance(strength, (float, int)):
             if strength < 0:
@@ -33,11 +33,11 @@ class Character:
             else:
                 self._strength = float(strength)
         else:
-            print("type ERROR")
+            print('type ERROR')
 
     def __str__(self):
         """Return a string representation of the Character."""
-        return "{} {}".format(self._name, self._strength)
+        return '{} {}'.format(self._name, self._strength)
 
     def __gt__(self, other):
         """Compare the strength of the characters.
@@ -63,7 +63,7 @@ class Character:
         if isinstance(name, str):
             self._name = name
         else:
-            print("type ERROR")
+            print('type ERROR')
 
     @property
     def strength(self):
@@ -89,7 +89,7 @@ class Character:
             else:
                 self._strength = float(strength)
         else:
-            print("type ERROR")
+            print('type ERROR')
 
     def fight(self, other):
         """Fight with another Character object.
@@ -176,17 +176,11 @@ class Orc(Character):
         if isinstance(weapon, bool):
             self._weapon = weapon
         else:
-            print("type ERROR")
+            print('type ERROR')
 
 
 class Human(Character):
-    """Class to make a Human character for a video game.
-
-    Attributes:
-        _name (str): Name of the Human (Protected)
-        _strength (float): Strength value between 0.0 and 5.0 (Protected)
-        _kingdom (str): The name of the character's kingdom (Protected)
-    """
+    """Class to make a Human character for a video game."""
 
     def __init__(self, name, strength, kingdom):
         """Construct a Human object.
@@ -235,14 +229,7 @@ class Human(Character):
 
 
 class Knight(Human):
-    """Class to make a Knight character for a video game.
-
-    Attributes:
-        _name (str): Name of the Knight (Protected)
-        _strength (float): Strength value between 0.0 and 5.0 (Protected)
-        _kingdom (str): The name of the Knight's kingdom (Protected)
-        _archers_list (list): Archers led by the Knight (Protected)
-    """
+    """Class to make a Knight character for a video game."""
 
     def __init__(self, name, strength, kingdom, archers_list):
         """Construct a Knight object.
@@ -285,20 +272,14 @@ class Knight(Human):
 
 
 class Archer(Human):
-    """Class to make a Archer character for a video game.
-
-    Attributes:
-        _name (str): Name of the Archer (Protected)
-        _strength (float): Strength value between 0.0 and 5.0 (Protected)
-        _kingdom (str): The name of the Archer's kingdom (Protected)
-    """
+    """Class to make a Archer character for a video game."""
 
 
 def main():
     """Test methods for the classes."""
     a1 = Archer('Conor', 1.0, 'Gondor')
     print(a1.name)
-    k1 = Knight('Bob', 4.5, 'Gondor')
+    k1 = Knight('Bob', 4.5, 'Gondor', [a1])
     print(k1)
     o1 = Orc('Ogrorg', 3.6, True)
     o2 = Orc('Borg', 0, True)
