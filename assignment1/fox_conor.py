@@ -292,7 +292,6 @@ class Archer(Human):
         _strength (float): Strength value between 0.0 and 5.0 (Protected)
         _kingdom (str): The name of the Archer's kingdom (Protected)
     """
-    pass
 
 
 def main():
