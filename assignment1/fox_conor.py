@@ -6,12 +6,7 @@ Author: Conor Fox 119322236
 
 
 class Character:
-    """Class to make a Character for a video game.
-
-    Attributes:
-        _name (str): Name of the character (Protected)
-        _strength (float): Strength value between 0.0 and 5.0 (Protected)
-    """
+    """Class to make a Character for a video game."""
 
     def __init__(self, name, strength):
         """Construct a Character object.
@@ -59,7 +54,11 @@ class Character:
 
     @name.setter
     def name(self, name):
-        """Change the name of the Character."""
+        """Change the name of the Character.
+
+        Args:
+            name (str): New name for the Character
+        """
         if isinstance(name, str):
             self._name = name
         else:
@@ -74,12 +73,8 @@ class Character:
     def strength(self, strength):
         """Change the strength value of the Character.
 
-        Notes:
-            If the value is less than 0 or greater than 5 it will be truncated
-            to the maximum or minimum value.
-
         Args:
-            strength (float): Value between 0 and 5 for the characters strength
+            strength (float): Value between 0 and 5 for the Characters strength
         """
         if isinstance(strength, (float, int)):
             if strength < 0:
@@ -116,13 +111,7 @@ class Character:
 
 
 class Orc(Character):
-    """Class to make an Orc character for a video game.
-
-    Attributes:
-        _name (str): Name of the orc (Protected)
-        _strength (float): Orc strength value between 0.0 and 5.0 (Protected)
-        _weapon (bool): Boolean value to represent a weapon (Protected)
-    """
+    """Class to make an Orc character for a video game."""
 
     def __init__(self, name, strength, weapon):
         """Construct an Orc object.
@@ -156,7 +145,7 @@ class Orc(Character):
                 return super().__gt__(other)
             if self.weapon and not other.weapon:
                 return True
-        # If the Orc isn't fighting an Orc doesn't have a weapon it will lose
+        # If the Orc isn't fighting an Orc & doesn't have a weapon it will lose
         elif not self._weapon:
             return False
         return super().__gt__(other)
@@ -202,12 +191,16 @@ class Human(Character):
 
     @property
     def kingdom(self):
-        """Return the name of the Character's kingdom."""
+        """Return the name of the Human's kingdom."""
         return self._kingdom
 
     @kingdom.setter
     def kingdom(self, kingdom):
-        """Change the name of the Character's kingdom."""
+        """Change the name of the Human's kingdom.
+
+        Args:
+            kingdom (str): New kingdom for the Human
+        """
         if isinstance(kingdom, str):
             self._kingdom = kingdom
         else:
@@ -215,9 +208,6 @@ class Human(Character):
 
     def fight(self, other):
         """Fight with an Orc object.
-
-        Notes:
-            Humans can only fight with Orcs, not other Humans
 
         Args:
             other: An Orc object to fight with.
@@ -235,9 +225,9 @@ class Knight(Human):
         """Construct a Knight object.
 
         Args:
-            name (str): The name for the Human
+            name (str): The name for the Knight
             strength (float): Value between 0 and 5 for the fighting strength
-            kingdom (str): The name of the kingdom that the Human belongs to
+            kingdom (str): The name of the kingdom that the Knight belongs to
             archers_list (list): List of Archers led by the Knight
         """
         super().__init__(name, strength, kingdom)
@@ -260,7 +250,11 @@ class Knight(Human):
 
     @archers_list.setter
     def archers_list(self, archers_list):
-        """Change the list of the Archers led by the Knight."""
+        """Change the list of the Archers led by the Knight.
+
+        Args:
+            archers_list (list): List of Archers in the same kingdom as Knight
+        """
         if isinstance(archers_list, list):
             knights_archers = []  # New list to contain satisfactory archers
             for archer in archers_list:
