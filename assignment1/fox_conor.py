@@ -15,24 +15,12 @@ class Character:
             name (str): The name for the Character
             strength (float): Value between 0 and 5 for the fighting strength
         """
-        if isinstance(name, str):
-            self._name = name
-        else:
-            print('type ERROR')
-
-        if isinstance(strength, (float, int)):
-            if strength < 0:
-                self._strength = 0.0  # Make value 0 if input is less than 0
-            elif strength > 5:
-                self._strength = 5.0  # Make value 5 if input is greater than 5
-            else:
-                self._strength = float(strength)
-        else:
-            print('type ERROR')
+        self.name = name
+        self.strength = strength
 
     def __str__(self):
         """Return a string representation of the Character."""
-        return '{} {}'.format(self._name, self._strength)
+        return "{} {}".format(self._name, self._strength)
 
     def __gt__(self, other):
         """Compare the strength of the characters.
@@ -62,7 +50,7 @@ class Character:
         if isinstance(name, str):
             self._name = name
         else:
-            print('type ERROR')
+            print("type ERROR")
 
     @property
     def strength(self):
@@ -84,7 +72,7 @@ class Character:
             else:
                 self._strength = float(strength)
         else:
-            print('type ERROR')
+            print("type ERROR")
 
     def fight(self, other):
         """Fight with another Character object.
@@ -121,15 +109,12 @@ class Orc(Character):
             strength (float): Value between 0 and 5 for the fighting strength
             weapon (bool): True if the Orc has a weapon, False if not
         """
-        Character.__init__(self, name, strength)
-        if isinstance(weapon, bool):
-            self._weapon = weapon
-        else:
-            print('type ERROR')
+        super().__init__(name, strength)
+        self.weapon = weapon
 
     def __str__(self):
         """Return a string representation of the Orc."""
-        return '{} {}'.format(super().__str__(), str(self._weapon))
+        return "{} {}".format(super().__str__(), str(self._weapon))
 
     def __gt__(self, other):
         """Compare the strength of the characters.
@@ -165,7 +150,7 @@ class Orc(Character):
         if isinstance(weapon, bool):
             self._weapon = weapon
         else:
-            print('type ERROR')
+            print("type ERROR")
 
 
 class Human(Character):
@@ -180,14 +165,11 @@ class Human(Character):
             kingdom (str): The name of the kingdom that the Human belongs to
         """
         super().__init__(name, strength)
-        if isinstance(kingdom, str):
-            self._kingdom = kingdom
-        else:
-            print('type ERROR')
+        self.kingdom = kingdom
 
     def __str__(self):
         """Return a string representation of the Human."""
-        return '{} {}'.format(super().__str__(), self._kingdom)
+        return "{} {}".format(super().__str__(), self._kingdom)
 
     @property
     def kingdom(self):
@@ -204,7 +186,7 @@ class Human(Character):
         if isinstance(kingdom, str):
             self._kingdom = kingdom
         else:
-            print('type ERROR')
+            print("type ERROR")
 
     def fight(self, other):
         """Fight with an Orc object.
@@ -215,7 +197,7 @@ class Human(Character):
         if isinstance(other, Orc):
             Character.fight(self, other)
         else:
-            print('fight Error')
+            print("fight Error")
 
 
 class Knight(Human):
@@ -231,17 +213,14 @@ class Knight(Human):
             archers_list (list): List of Archers led by the Knight
         """
         super().__init__(name, strength, kingdom)
-        if isinstance(archers_list, list):
-            self._archers_list = archers_list
-        else:
-            print('type ERROR')
+        self.archers_list = archers_list
 
     def __str__(self):
         """Return a string representation of the Knight."""
         archers_string = []
         for archer in self._archers_list:
             archers_string.append(str(archer))
-        return '{} {}'.format(super().__str__(), str(archers_string))
+        return "{} {}".format(super().__str__(), str(archers_string))
 
     @property
     def archers_list(self):
@@ -262,10 +241,10 @@ class Knight(Human):
                     if archer.kingdom == self._kingdom:  # If same kingdom
                         knights_archers += archer  # Add the archer to the list
                 else:
-                    print('archers list ERROR')
+                    print("archers list ERROR")
             self._archers_list = knights_archers  # Set the knights archer list
         else:
-            print('type ERROR')
+            print("type ERROR")
 
 
 class Archer(Human):
