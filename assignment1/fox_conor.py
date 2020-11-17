@@ -29,7 +29,7 @@ class Character:
             other: Another Character object to compare with
 
         Returns:
-            True if the Characrer is stronger than other, otherwise False.
+            True if the Character is stronger than other, otherwise False.
         """
         if self._strength > other.strength:
             return True
@@ -195,9 +195,9 @@ class Human(Character):
             other: An Orc object to fight with.
         """
         if isinstance(other, Orc):
-            Character.fight(self, other)
+            super().fight(other)
         else:
-            print("fight Error")
+            print("fight ERROR")
 
 
 class Knight(Human):
@@ -220,7 +220,7 @@ class Knight(Human):
         archers_string = []
         for archer in self._archers_list:
             archers_string.append(str(archer))
-        return "{} {}".format(super().__str__(), str(archers_string))
+        return "{} [{}]".format(super().__str__(), ", ".join(archers_string))
 
     @property
     def archers_list(self):
@@ -239,10 +239,12 @@ class Knight(Human):
             for archer in archers_list:
                 if isinstance(archer, Archer):  # archer must be of type Archer
                     if archer.kingdom == self._kingdom:  # If same kingdom
-                        knights_archers += archer  # Add the archer to the list
+                        knights_archers.append(archer)  # Add archer to list
                 else:
                     print("archers list ERROR")
-            self._archers_list = knights_archers  # Set the knights archer list
+                    break
+            else:
+                self._archers_list = knights_archers  # Set knights archer list
         else:
             print("type ERROR")
 
