@@ -1,74 +1,189 @@
 from fox_conor import *
 
-print("----------------\nObject Creation\n----------------")
+import unittest
+import sys
+from contextlib import contextmanager
+from io import StringIO
 
-my_orc = Orc('Orcy', 5, True)
 
-orc1 = Orc('Conor', 1.0, True)
-orc2 = Orc('Liam', 4.6, False)
-# orc_error = Orc(3, 80, 'True')
+@contextmanager
+def captured_output():
+    new_out, new_err = StringIO(), StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    try:
+        sys.stdout, sys.stderr = new_out, new_err
+        yield sys.stdout, sys.stderr
+    finally:
+        sys.stdout, sys.stderr = old_out, old_err
 
-print('My Orc:', my_orc)
-print('Orc 1:', orc1)
-print('Orc 2:', orc2)
-# print('Orc w/ Error:', orc_error)
 
-print("----------------\nAttribute Changing\n----------------")
+class orcTest(unittest.TestCase):
+    def test_constructor(self):
+        orc1 = Orc("Ogrorg", 4.3, True)
+        assert orc1.strength == 4.3, "should be 4.3"
+        assert orc1.weapon is True, "should be True"
+        with captured_output() as (out, err):
+            Orc(1, 1, False)
+        output = out.getvalue().strip()
+        assert output == "type ERROR"
 
-my_orc.name = 5
-my_orc.name = 'Changed'
-my_orc.strength = 1
-print('My Orc:', my_orc)
-my_orc.strength = -0.5
-print('My Orc:', my_orc)
-my_orc.strength = 100
-print('My Orc:', my_orc)
+    def test_attributes(self):
+        orc1 = Orc("Ogrorg", 4.3, True)
+        orc1.name = "joe"
+        with captured_output() as (out, err):
+            orc1.name = 3
+        output = out.getvalue().strip()
+        assert output == "type ERROR"
+        assert orc1.name == "joe", "should be 'joe'"
+        orc1.strength = -500
+        assert orc1.strength == 0.0, "should be 0.0"
+        orc1.strength = 555
+        assert orc1.strength == 5.0, "should be 5.0"
+        orc1.weapon = False
+        with captured_output() as (out, err):
+            orc1.weapon = 3
+        output = out.getvalue().strip()
+        assert output == "type ERROR"
+        assert orc1.weapon is False, "should be False"
 
-print('My Orc:', my_orc)
-print('Orc 1:', orc1)
-print('Orc 2:', orc2)
+    def test_string(self):
+        orc1 = Orc("Ogrorg", 4.3, True)
+        with captured_output() as (out, err):
+            print(orc1)
+        output = out.getvalue().strip()
+        assert output == "Ogrorg 4.3 True"
 
-print("----------------\nGreater than\n----------------")
+    def test_greater_than(self):
+        orc1 = Orc("Ogrorg", 4.3, True)
+        orc2 = Orc("Borg", 1, False)
+        orc3 = Orc("Gorg", 0, True)
+        orc4 = Orc("Gorgo", 0, True)
+        assert orc3 > orc2
+        assert orc1 > orc2
+        assert orc1 > orc3
+        assert (orc3 > orc4) is False
 
-if orc1 > orc2:
-    print('Conor is stronger')
-else:
-    print('Liam is stronger')
+    def test_fight_orc(self):
+        orc1 = Orc("Ogrorg", 4.3, True)
+        orc2 = Orc("Borg", 1, False)
+        orc3 = Orc("Gorg", 0, True)
+        with captured_output() as (out, err):
+            orc1.fight(orc2)
+        output = out.getvalue().strip()
+        assert output == "Ogrorg 5.0 True"
+        assert orc2.strength == 1.0
+        assert orc1.strength == 5.0
+        orc3.fight(orc2)
+        assert orc3.strength == 1.0
+        orc3.fight(orc2)
+        orc3.fight(orc2)
+        orc3.fight(orc2)
+        orc3.fight(orc2)
+        assert orc3.strength == 5.0
+        orc3.fight(orc1)
+        assert orc1.strength == 4.5
+        assert orc3.strength == 4.5
 
-print(orc2 > orc1)
-print(orc1 > orc2)
 
-print("----------------\nFight With\n----------------")
+class archerTest(unittest.TestCase):
+    def test_constructor(self):
+        archer = Archer("Legolas", 2.5, "Woodland Kingdom")
+        assert archer.strength == 2.5
+        assert archer.kingdom == "Woodland Kingdom"
+        with captured_output() as (out, err):
+            Archer("Legolas", 2.5, False)
+        output = out.getvalue().strip()
+        assert output == "type ERROR"
 
-print('Before fighting', orc1, orc2)
+    def test_attributes(self):
+        archer = Archer("Legolas", 2.5, "Woodland Kingdom")
+        assert archer.strength == 2.5
+        archer.strength = 6
+        assert archer.strength == 5.0
+        assert archer.kingdom == "Woodland Kingdom"
+        with captured_output() as (out, err):
+            archer.kingdom = 2
+        output = out.getvalue().strip()
+        assert output == "type ERROR"
 
-orc1.fight(orc2)
-orc2.fight(orc1)
+    def test_fight(self):
+        a1 = Archer("Legolas", 2.5, "Woodland Kingdom")
+        a2 = Archer("Robin Hood", 2, "Sherwood Forest")
+        with captured_output() as (out, err):
+            a1.fight(a2)
+        output = out.getvalue().strip()
+        assert output == "fight ERROR"
 
-print('After fighting', orc1, orc2)
+    def test_string(self):
+        archer = Archer("Legolas", 2.5, "Woodland Kingdom")
+        with captured_output() as (out, err):
+            print(archer)
+        output = out.getvalue().strip()
+        assert output == "Legolas 2.5 Woodland Kingdom"
 
-orc2.weapon = True
 
-orc2.fight(orc1)
+class knightTest(unittest.TestCase):
+    def test_constructor(self):
+        knight = Knight("Aragorn", 4.9, "Gondor", [])
+        assert knight.strength == 4.9
+        assert knight.kingdom == "Gondor"
+        with captured_output() as (out, err):
+            Knight("Aragorn", 2.5, "Gondor", [1, 2, 3])
+        output = out.getvalue().strip()
+        assert output == "archers list ERROR"
 
-print('After fighting with weapons', orc1, orc2)
+    def test_attributes(self):
+        a1 = Archer("Legolas", 2.5, "Gondor")
+        a2 = Archer("Robin Hood", 2, "Sherwood Forest")
+        a3 = Archer("Haldir", 1.9, "Gondor")
+        knight = Knight("Aragorn", 4.9, "Gondor", [a1, a2, a3])
+        assert knight.archers_list == [a1, a3]
+        with captured_output() as (out, err):
+            knight.archers_list = [a1, a3, 3]
+        output = out.getvalue().strip()
+        assert output == "archers list ERROR"
 
-orc1.strength = 5
+    def test_fight(self):
+        knight = Knight("Aragorn", 4.9, "Gondor", [])
+        knight2 = Knight("Theoden", 2.5, "Rohan", [])
+        with captured_output() as (out, err):
+            knight.fight(knight2)
+        output = out.getvalue().strip()
+        assert output == "fight ERROR"
 
-orc1.fight(orc2)
+    def test_string(self):
+        a1 = Archer("Legolas", 2.5, "Gondor")
+        a2 = Archer("Haldir", 1.9, "Gondor")
+        knight = Knight("Aragorn", 4.9, "Gondor", [a1, a2])
+        with captured_output() as (out, err):
+            print(knight)
+        output = out.getvalue().strip()
+        assert output == "Aragorn 4.9 Gondor [Legolas 2.5 Gondor, Haldir 1.9 Gondor]"
 
-print('After fighting equal', orc1, orc2)
 
-print("----------------\nTrying to Break\n----------------")
+class characterTest(unittest.TestCase):
+    def test_cross_class_fight(self):
+        orc1 = Orc("Ogrorg", 4.3, True)
+        orc2 = Orc("Borg", 5.0, False)
+        orc3 = Orc("SuperOrc", 5.0, True)
+        knight = Knight("Aragorn", 4.9, "Gondor", [])
+        archer = Archer("Legolas", 2.5, "Woodland Kingdom")
+        with captured_output() as (out, err):
+            orc1.fight(knight)
+        output = out.getvalue().strip()
+        assert output == "Aragorn 5.0 Gondor []"
+        orc3.fight(knight)
+        assert orc3.strength == 4.5
+        assert knight.strength == 4.5
+        with captured_output() as (out, err):
+            orc2.fight(archer)
+        output = out.getvalue().strip()
+        assert output == "Legolas 3.5 Woodland Kingdom"
+        with captured_output() as (out, err):
+            orc2.fight(knight)
+        output = out.getvalue().strip()
+        assert output == "Aragorn 5.0 Gondor []"
 
-hello = 'hello'
 
-orc1.fight(hello)
-
-# print(orc2 < hello)
-
-orc3 = Orc('Dylan', 2.6, True)
-orc4 = Orc('Conor', 2.5, True)
-
-print(orc3, 'vs', orc4)
-print(orc3 > orc4)
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
