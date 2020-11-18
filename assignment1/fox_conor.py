@@ -171,6 +171,20 @@ class Human(Character):
         """Return a string representation of the Human."""
         return "{} {}".format(super().__str__(), self._kingdom)
 
+    def __gt__(self, other):
+        """Compare the strength of the characters.
+
+        Args:
+            other: Another Character object to compare with
+
+        Returns:
+            True if the Characrer is stronger than other, otherwise False.
+        """
+        if isinstance(other, Orc):
+            if not other.weapon:
+                return True
+        return super().__gt__(other)
+
     @property
     def kingdom(self):
         """Return the name of the Human's kingdom."""
