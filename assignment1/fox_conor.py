@@ -217,9 +217,7 @@ class Knight(Human):
 
     def __str__(self):
         """Return a string representation of the Knight."""
-        archers_string = []
-        for archer in self._archers_list:
-            archers_string.append(str(archer))
+        archers_string = [str(archer) for archer in self._archers_list]
         return "{} [{}]".format(super().__str__(), ", ".join(archers_string))
 
     @property
