@@ -7,54 +7,71 @@ Author: Conor Fox 119322236
 import tkinter as tk
 
 
-class Figure():
-    def __init__(self, clickable=False):
-        self._colour = "blue"
-        self._figure = None
+class Game(tk.Frame):
+    def __init__(self):
+        super().__init__()
+        self.master.minsize(height=650, width=1000)
+        self.master.title("Peekaboo")
+        self.grid()
+        self.createGame()
 
-    def draw(self):
-        self._figure = canv.create_oval(100, 100, 300, 300, fill=self._colour)
+    def createGame(self):
+        self.game = tk.Frame(self)
+        self.game.grid(row=0, column=0)
 
-    def delete(self):
-        if self._figure:
-            canv.delete(self._figure)
-    pass
+        self.canvas = tk.Canvas(self.game, width=950, height=525)
+        self.canvas.pack(padx=25, pady=25)
+        self.canvas.configure(bg="lightgray")
+
+        self.menu = tk.Frame(self)
+        self.menu.grid(row=1, column=0, padx=5, pady=5)
+
+        self.play_btn = tk.Button(self.menu, text="Play", command=self.play)
+        self.play_btn.configure(padx=20, pady=10)
+        self.play_btn.grid(row=0, column=1)
+
+    def closeMenu(self):
+        if self.menu:
+            self.menu.destroy()
+            self.menu = None
+
+    def play(self):
+        self.lives_label = tk.Label(self.menu, text="Lives: 5")
+        self.lives_label.configure(padx=20, pady=10)
+        self.lives_label.grid(row=0, column=0)
+
+        self.score_label = tk.Label(self.menu, text="Score: 0")
+        self.score_label.configure(padx=20, pady=10)
+        self.score_label.grid(row=0, column=2)
+
+        print("playing")
+
+    def addScore(self, increment=1):
+        score = self.score_label["text"]
+        score = score.split(":")
+        score_number = int(score[1].strip())
+        if score_number < 999:
+            score_number += increment
+        score = score[0] + ": " + str(score_number)
+        self.score_label["text"] = score
+
+    def loseALife(self):
+        lives = self.lives_label["text"]
+        lives = lives.split(":")
+        lives_number = int(lives[1].strip())
+        if lives_number > 1:
+            lives_number -= 1
+        else:
+            self.gameoverMenu()
+        lives = lives[0] + ": " + str(lives_number)
+        self.lives_label["text"] = lives
+
+    def gameoverMenu(self):
+        pass
+
+    def exit(self):
+        self.master.destroy()
 
 
-def game():
-    figure = Figure()
-    figures_list.append(figure)
-    for figure in figures_list:
-        figure.draw()
-    return
-
-
-def delete():
-    for figure in figures_list:
-        figure.delete()
-
-
-figures_list = []
-root = tk.Tk()
-root.minsize(height=600, width=1000)
-root.title("Peekaboo")
-
-# Create the canvas
-canv = tk.Canvas(root, width=950, height=500)
-canv.configure(bg="lightgray")
-canv.pack(padx=25, pady=25)
-# Create the start button
-start_button = tk.Button(root, text="Play!", command=game)
-start_button.configure(padx=20, pady=10)
-start_button.pack()
-
-delete_button = tk.Button(root, text="delete", command=delete)
-delete_button.pack()
-
-
-def create_game():
-    pass
-
-
-create_game()
-root.mainloop()
+game = Game()
+game.mainloop()
