@@ -10,6 +10,10 @@ import tkinter as tk
 class Game(tk.Frame):
     def __init__(self):
         super().__init__()
+
+        self.lives = 5
+        self.score = 0
+
         self.master.minsize(width=1280, height=800)
         self.master.title("Peekaboo")
         self.grid()
@@ -39,41 +43,32 @@ class Game(tk.Frame):
         self.play_btn.grid(row=1, column=1)
 
     def play(self):
-        self.lives_label = tk.Label(self.menu, text="Lives: 5")
+        lives_string = "Lives: " + str(self.lives)
+        self.lives_label = tk.Label(self.menu, text=lives_string)
         self.lives_label.configure(padx=20, pady=10)
         self.lives_label.grid(row=1, column=0)
 
-        self.score_label = tk.Label(self.menu, text="Score: 0")
+        score_string = "Score: " + str(self.score)
+        self.score_label = tk.Label(self.menu, text=score_string)
         self.score_label.configure(padx=20, pady=10)
         self.score_label.grid(row=1, column=2)
 
         print("playing")
 
     def addScore(self):
-        score = self.score_label["text"]
-        score = score.split(":")
-        score_number = int(score[1].strip())
-        if score_number < 999:
-            score_number += 1
-        score = score[0] + ": " + str(score_number)
-        self.score_label["text"] = score
+        if self.score < 999:
+            self.score += 1
+        self.score_label["text"] = "Score: " + self.score
 
     def loseALife(self):
-        lives = self.lives_label["text"]
-        lives = lives.split(":")
-        lives_number = int(lives[1].strip())
-        if lives_number > 1:
-            lives_number -= 1
+        if self.lives > 1:
+            self.lives -= 1
         else:
             self.gameoverMenu()
-        lives = lives[0] + ": " + str(lives_number)
-        self.lives_label["text"] = lives
+        self.lives_label["text"] = "Lives: " + str(self.lives)
 
     def gameOver(self):
-        final_score = self.score_label["text"]
-        final_score = final_score.split(":")
-        final_score = int(final_score[1].strip())
-        gameover_string = "Game Over! - Final Score: " + str(final_score)
+        gameover_string = "Game Over! - Final Score: " + str(self.score)
 
         self.score_label.destroy()
         self.lives_label.destroy()
@@ -91,6 +86,8 @@ class Game(tk.Frame):
         self.game_over_label.grid(row=0, column=1, columnspan=2)
 
     def newGame(self):
+        self.lives = 5
+        self.score = 0
         self.menu.destroy()
         self.game.destroy()
         self.createGame()
