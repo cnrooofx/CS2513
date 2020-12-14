@@ -24,6 +24,9 @@ class Game(tk.Frame):
         self.score = 0
         self.shape = tk.StringVar()
         self.shape.set("circle")
+        self.difficulty = tk.IntVar()
+        self.difficulty.set(1)  # 1 means Normal difficulty by default
+        self.time = 2
         self.menu = None
         self.game = None
         self.width = 1230  # Width of the canvas
@@ -35,6 +38,16 @@ class Game(tk.Frame):
         menu_bar.add_cascade(label="Game", menu=game_menu)
         game_menu.add_command(label="New Game", command=self.new_game)
         game_menu.add_command(label="Exit", command=self.exit)
+
+        # Difficulty menu
+        difficulty = tk.Menu(menu_bar)
+        menu_bar.add_cascade(label="Difficulty", menu=difficulty)
+        difficulty.add_radiobutton(label="Easy", variable=self.difficulty,
+                                   value=0)
+        difficulty.add_radiobutton(label="Normal", variable=self.difficulty,
+                                   value=1)
+        difficulty.add_radiobutton(label="Hard", variable=self.difficulty,
+                                   value=2)
 
         # Menu for changing the shape of the figure
         shapes_menu = tk.Menu(menu_bar)
@@ -49,6 +62,7 @@ class Game(tk.Frame):
                                     value="rectangle")
         self.master.config(menu=menu_bar)  # Link to the root window
         self.grid()
+        self.set_difficulty()
         self.new_game()
 
     def new_game(self):
@@ -93,7 +107,7 @@ class Game(tk.Frame):
         self.play_btn.configure(text="New Game", command=self.new_game)
 
         # Label to explain the rules
-        rules = "Click on the red icon in under 2 seconds"
+        rules = "Click on the red icon in under {} seconds".format(self.time)
         self.rules = tk.Label(self.menu, text=rules)
         self.rules.configure(padx=20, pady=10)
         self.rules.grid(row=0, column=0, columnspan=3)
@@ -170,6 +184,9 @@ class Game(tk.Frame):
     def update_lives(self):
         """Update the lives label with the current number of lives."""
         self.lives_label["text"] = "Lives: " + str(self.lives)
+
+    def set_difficulty(self):
+        pass
 
     def game_over(self):
         """Stop the game."""
