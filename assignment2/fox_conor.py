@@ -5,6 +5,9 @@ Author: Conor Fox 119322236
 """
 
 import tkinter as tk
+import tkinter.font as font
+from random import randint
+from time import time
 
 
 class Game(tk.Frame):
@@ -13,18 +16,38 @@ class Game(tk.Frame):
     def __init__(self):
         """Initialise the game."""
         super().__init__()
+        self.master.minsize(width=1280, height=800)
+        self.master.title("Peekaboo")
 
-        self.name = "Player"
+        self.name = None
         self.lives = 5
         self.score = 0
+        self.shape = tk.StringVar()
+        self.shape.set("circle")
         self.menu = None
         self.game = None
+        self.width = 1230  # Width of the canvas
+        self.height = 650  # Height of the canvas
 
-        self.width = 1280
-        self.height = 800
+        menu_bar = tk.Menu(self)  # Main menu
+        # Menu for new game and exit
+        game_menu = tk.Menu(menu_bar)
+        menu_bar.add_cascade(label="Game", menu=game_menu)
+        game_menu.add_command(label="New Game", command=self.new_game)
+        game_menu.add_command(label="Exit", command=self.exit)
 
-        self.master.minsize(width=self.width, height=self.height)
-        self.master.title("Peekaboo")
+        # Menu for changing the shape of the figure
+        shapes_menu = tk.Menu(menu_bar)
+        menu_bar.add_cascade(label="Shape", menu=shapes_menu)
+        shapes_menu.add_radiobutton(label="Circle", variable=self.shape,
+                                    value="circle")
+        shapes_menu.add_radiobutton(label="Square", variable=self.shape,
+                                    value="square")
+        shapes_menu.add_radiobutton(label="Oval", variable=self.shape,
+                                    value="oval")
+        shapes_menu.add_radiobutton(label="Rectangle", variable=self.shape,
+                                    value="rectangle")
+        self.master.config(menu=menu_bar)  # Link to the root window
         self.grid()
         self.new_game()
 
@@ -39,9 +62,9 @@ class Game(tk.Frame):
             self.game = tk.Frame(self)
             self.game.grid(row=0, column=0)
 
-            self.canvas = tk.Canvas(self.game, width=1230, height=650)
+            self.canvas = tk.Canvas(self.game, bg="#e5e5e5")
+            self.canvas.configure(width=self.width, height=self.height)
             self.canvas.pack(padx=25, pady=25)
-            self.canvas.configure(bg="#e5e5e5")
         else:
             self.canvas.delete("all")
 
@@ -55,7 +78,8 @@ class Game(tk.Frame):
         self.name_label.grid(row=0, column=0)
 
         self.name_entry = tk.Entry(self.menu)
-        # self.name_entry.insert(0, "Player")
+        if self.name is not None:
+            self.name_entry.insert(0, self.name)
         self.name_entry.grid(row=0, column=1)
 
         # Button to start the game
@@ -66,7 +90,13 @@ class Game(tk.Frame):
     def play(self):
         """Reconfigures the widgets and starts the game."""
         # Play button now starts a new game instead
-        self.play_btn.configure(text="New Game", command=self.game_over)
+        self.play_btn.configure(text="New Game", command=self.new_game)
+
+        # Label to explain the rules
+        rules = "Click on the red icon in under 2 seconds"
+        self.rules = tk.Label(self.menu, text=rules)
+        self.rules.configure(padx=20, pady=10)
+        self.rules.grid(row=0, column=0, columnspan=3)
 
         # Label to show remaining lives
         self.lives_label = tk.Label(self.menu)
@@ -89,18 +119,49 @@ class Game(tk.Frame):
         self.name_entry.destroy()
         self.name_label.destroy()
 
-        print("playing", self.name)
-        # square = self.canvas.create_text(100, 100, text="Playing")
-        # square.configure(justify="center", font={Arial 20 bold})
-
         # Create the first figure, which starts the game
+        self.new_figure()
 
     def new_figure(self):
-        """Clear the canvas and make a new figure."""
-        self.canvas.delete("all")
+        """Clear the canvas, make a new figure and start the timer."""
+        canvas = self.canvas
+        canvas.delete("all")
 
-    def click_handler(self):
+        size = randint(25, 50)
+        size2 = randint(25, 50)
+        x = randint(0, self.width - size)
+        y = randint(0, self.height - size)
+        colour = "red"
+
+        self.start = time()  # Start of timer for the figure
+
+        shape = self.shape.get()
+        if shape == "circle":
+            fig = canvas.create_oval(x, y, x+size, y+size, fill=colour)
+        elif shape == "oval":
+            fig = canvas.create_oval(x, y, x+size, y+size2, fill=colour)
+        elif shape == "rectangle":
+            fig = canvas.create_rectangle(x, y, x+size, y+size2, fill=colour)
+        else:
+            fig = canvas.create_rectangle(x, y, x+size, y+size, fill=colour)
+        canvas.tag_bind(fig, "<ButtonPress-1>", self.click_handler)
+
+    def click_handler(self, event):
         """Handle the callback for clicking on a figure."""
+        end = time()
+        time_elapsed = end - self.start
+
+        if time_elapsed < 2:
+            self.score += 1
+        else:
+            self.lives -= 1
+
+        if self.lives <= 0:
+            self.game_over()
+        else:
+            self.update_score()
+            self.update_lives()
+            self.new_figure()
 
     def update_score(self):
         """Update the score label with the current score."""
@@ -115,13 +176,15 @@ class Game(tk.Frame):
         self.canvas.delete("all")
 
         # Add the gameover message to the canvas
-        gameover_font = tk.font.Font(font=("Helvetica", 24))
+        gameover_font = font.Font(font=("Helvetica", 32))
         text = "Game Over {}! - Final Score: {}".format(self.name, self.score)
         self.canvas.create_text(615, 325, text=text, font=gameover_font)
 
+        self.rules.destroy()
         self.score_label.destroy()
         self.lives_label.destroy()
 
+        # Create the button to exit the game
         self.quit_btn = tk.Button(self.menu, text="Quit", command=self.exit)
         self.quit_btn.configure(padx=20, pady=10)
         self.quit_btn.grid(row=1, column=2, padx=10, pady=5)
