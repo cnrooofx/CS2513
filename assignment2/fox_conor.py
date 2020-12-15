@@ -6,7 +6,7 @@ Author: Conor Fox 119322236
 
 import tkinter as tk
 import tkinter.font as font
-from random import randint
+from random import randint, choice
 from time import time
 
 
@@ -22,11 +22,12 @@ class Game(tk.Frame):
         self.name = None
         self.lives = 5
         self.score = 0
+        self.colour_list = ["#9AC8FC", "#64872C", "#B99DF0", "#FFA46C",
+                            "#421D65", "#365476"]
         self.shape = tk.StringVar()
         self.shape.set("circle")
         self.difficulty = tk.IntVar()
         self.difficulty.set(1)  # 1 means Normal difficulty by default
-        self.time = 2
         self.menu = None
         self.game = None
         self.width = 1230  # Width of the canvas
@@ -43,11 +44,11 @@ class Game(tk.Frame):
         difficulty = tk.Menu(menu_bar)
         menu_bar.add_cascade(label="Difficulty", menu=difficulty)
         difficulty.add_radiobutton(label="Easy", variable=self.difficulty,
-                                   value=0)
+                                   value=0, command=self.set_difficulty)
         difficulty.add_radiobutton(label="Normal", variable=self.difficulty,
-                                   value=1)
+                                   value=1, command=self.set_difficulty)
         difficulty.add_radiobutton(label="Hard", variable=self.difficulty,
-                                   value=2)
+                                   value=2, command=self.set_difficulty)
 
         # Menu for changing the shape of the figure
         shapes_menu = tk.Menu(menu_bar)
@@ -67,7 +68,6 @@ class Game(tk.Frame):
 
     def new_game(self):
         """Create all the widgets needed for a new game."""
-        self.lives = 5
         self.score = 0
         if self.menu:
             self.menu.destroy()
@@ -107,7 +107,7 @@ class Game(tk.Frame):
         self.play_btn.configure(text="New Game", command=self.new_game)
 
         # Label to explain the rules
-        rules = "Click on the red icon in under {} seconds".format(self.time)
+        rules = "Click on the red icon in under {} second(s)".format(self.time)
         self.rules = tk.Label(self.menu, text=rules)
         self.rules.configure(padx=20, pady=10)
         self.rules.grid(row=0, column=0, columnspan=3)
@@ -158,14 +158,56 @@ class Game(tk.Frame):
             fig = canvas.create_rectangle(x, y, x+size, y+size2, fill=colour)
         else:
             fig = canvas.create_rectangle(x, y, x+size, y+size, fill=colour)
+        self.random_figures()
         canvas.tag_bind(fig, "<ButtonPress-1>", self.click_handler)
+
+    def random_figures(self):
+        canvas = self.canvas
+        difficulty = self.difficulty.get()
+        if difficulty == 0:
+            return
+        elif difficulty == 1:
+            num_figures = 5
+        else:
+            num_figures = 10
+        shape = self.shape.get()
+        if shape == "circle":
+            for i in range(num_figures):
+                size = randint(25, 50)
+                x = randint(0, self.width - size)
+                y = randint(0, self.height - size)
+                colour = choice(self.colour_list)
+                canvas.create_oval(x, y, x+size, y+size, fill=colour)
+        elif shape == "oval":
+            for i in range(num_figures):
+                size = randint(25, 50)
+                size2 = randint(25, 50)
+                x = randint(0, self.width - size)
+                y = randint(0, self.height - size)
+                colour = choice(self.colour_list)
+                canvas.create_oval(x, y, x+size, y+size2, fill=colour)
+        elif shape == "rectangle":
+            for i in range(num_figures):
+                size = randint(25, 50)
+                size2 = randint(25, 50)
+                x = randint(0, self.width - size)
+                y = randint(0, self.height - size)
+                colour = choice(self.colour_list)
+                canvas.create_rectangle(x, y, x+size, y+size2, fill=colour)
+        else:
+            for i in range(num_figures):
+                size = randint(25, 50)
+                x = randint(0, self.width - size)
+                y = randint(0, self.height - size)
+                colour = choice(self.colour_list)
+                canvas.create_rectangle(x, y, x+size, y+size, fill=colour)
 
     def click_handler(self, event):
         """Handle the callback for clicking on a figure."""
         end = time()
         time_elapsed = end - self.start
 
-        if time_elapsed < 2:
+        if time_elapsed <= self.time:
             self.score += 1
         else:
             self.lives -= 1
@@ -186,7 +228,17 @@ class Game(tk.Frame):
         self.lives_label["text"] = "Lives: " + str(self.lives)
 
     def set_difficulty(self):
-        pass
+        difficulty_level = self.difficulty.get()
+        if difficulty_level == 0:
+            self.lives = 10
+            self.time = 2
+        elif difficulty_level == 1:
+            self.lives = 5
+            self.time = 2
+        else:
+            self.lives = 3
+            self.time = 1
+        self.new_game()
 
     def game_over(self):
         """Stop the game."""
