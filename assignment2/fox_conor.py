@@ -22,8 +22,8 @@ class Game(tk.Frame):
         self.name = None
         self.lives = 5
         self.score = 0
-        self.colour_list = ["#9AC8FC", "#64872C", "#B99DF0", "#FFA46C",
-                            "#421D65", "#365476"]
+        self.colour_list = ["#7698B3", "#717744", "#9C528B", "#E07A5F",
+                            "#FFD166", "#FFA9A3", "#4E148C", "#23395B"]
         self.shape = tk.StringVar()
         self.shape.set("circle")
         self.difficulty = tk.IntVar()
@@ -145,7 +145,7 @@ class Game(tk.Frame):
         size2 = randint(25, 50)
         x = randint(0, self.width - size)
         y = randint(0, self.height - size)
-        colour = "red"
+        colour = "#FF5155"
 
         self.start = time()  # Start of timer for the figure
 
@@ -158,15 +158,14 @@ class Game(tk.Frame):
             fig = canvas.create_rectangle(x, y, x+size, y+size2, fill=colour)
         else:
             fig = canvas.create_rectangle(x, y, x+size, y+size, fill=colour)
-        self.random_figures()
+        if self.difficulty.get() != 0:
+            self.random_figures()
         canvas.tag_bind(fig, "<ButtonPress-1>", self.click_handler)
 
     def random_figures(self):
+        """Create some random figures on the canvas."""
         canvas = self.canvas
-        difficulty = self.difficulty.get()
-        if difficulty == 0:
-            return
-        elif difficulty == 1:
+        if self.difficulty.get() == 1:
             num_figures = 5
         else:
             num_figures = 10
@@ -228,6 +227,7 @@ class Game(tk.Frame):
         self.lives_label["text"] = "Lives: " + str(self.lives)
 
     def set_difficulty(self):
+        """Change the difficulty and start a new game."""
         difficulty_level = self.difficulty.get()
         if difficulty_level == 0:
             self.lives = 10
