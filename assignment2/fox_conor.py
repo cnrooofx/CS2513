@@ -22,8 +22,8 @@ class Game(tk.Frame):
         self.name = None
         self.lives = 5
         self.score = 0
-        self.colour_list = ["#7698B3", "#717744", "#9C528B", "#E07A5F",
-                            "#FFD166", "#FFA9A3", "#4E148C", "#23395B"]
+        self.colour_list = ["#1BE7FF", "#6EEB83", "#9C528B", "#FFB800",
+                            "#FFD166", "#F47C98", "#4E148C", "#4D6CFA"]
         self.shape = tk.StringVar()
         self.shape.set("circle")
         self.difficulty = tk.IntVar()
@@ -107,7 +107,7 @@ class Game(tk.Frame):
         self.play_btn.configure(text="New Game", command=self.new_game)
 
         # Label to explain the rules
-        rules = "Click on the red icon in under {} second(s)".format(self.time)
+        rules = "Click on the red icon in under {} seconds".format(self.time)
         self.rules = tk.Label(self.menu, text=rules)
         self.rules.configure(padx=20, pady=10)
         self.rules.grid(row=0, column=0, columnspan=3)
@@ -231,13 +231,13 @@ class Game(tk.Frame):
         difficulty_level = self.difficulty.get()
         if difficulty_level == 0:
             self.lives = 10
-            self.time = 2
+            self.time = 2.5
         elif difficulty_level == 1:
             self.lives = 5
             self.time = 2
         else:
             self.lives = 3
-            self.time = 1
+            self.time = 1.5
         self.new_game()
 
     def game_over(self):
