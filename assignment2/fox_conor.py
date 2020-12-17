@@ -145,7 +145,7 @@ class Game(tk.Frame):
         size2 = randint(25, 50)
         x = randint(0, self.width - size)
         y = randint(0, self.height - size)
-        colour = "#FF5155"
+        colour = "red"
 
         self.start = time()  # Start of timer for the figure
 
